@@ -1,58 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample HTML Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 40px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #0056b3;
-        }
-        .button {
-            display: inline-block;
-            background: #0056b3;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 15px;
-        }
-        .button:hover {
-            background: #003d82;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Power BI Embed Test Page</title>
+<style>
+  :root {
+    --bg: #f5f7fa; --card: #ffffff; --text: #1f2937; --muted: #6b7280;
+    --accent: #f2c811; --accent-text: #1f2937; --border: #e5e7eb; --ok: #16a34a;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111827; --card: #1f2937; --text: #f3f4f6; --muted: #9ca3af;
+      --border: #374151; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111827; --card: #1f2937; --text: #f3f4f6; --muted: #9ca3af;
+    --border: #374151; color-scheme: dark;
+  }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    padding: 20px;
+  }
+  .card {
+    max-width: 640px; margin: 0 auto; background: var(--card);
+    border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  }
+  h1 { margin: 0 0 4px; font-size: 1.4rem; }
+  p.sub { margin: 0 0 20px; color: var(--muted); }
+  .row { display: flex; justify-content: space-between; gap: 12px;
+         padding: 10px 0; border-top: 1px solid var(--border); }
+  .row span:first-child { color: var(--muted); }
+  .ok { color: var(--ok); font-weight: 600; }
+  button {
+    margin-top: 20px; padding: 10px 18px; border: 0; border-radius: 8px;
+    background: var(--accent); color: var(--accent-text);
+    font-weight: 600; font-size: 1rem; cursor: pointer;
+  }
+  .count { margin-left: 12px; font-weight: 600; }
+</style>
 </head>
 <body>
+  <div class="card">
+    <h1>Power BI Embed Test</h1>
+    <p class="sub">If you can read this inside your report, the web embed works.</p>
 
-    <div class="container">
-        <h1>Welcome to My Sample Webpage</h1>
-        <p>This is a foundational HTML5 boilerplate template designed for testing and development. It contains structured tags, metadata, and modern inline styles for demonstration purposes.</p>
-        
-        <h2>Key Page Elements</h2>
-        <ul>
-            <li><strong>Headings & Paragraphs:</strong> Formatted structure for clean content presentation.</li>
-            <li><strong>Responsive CSS layout:</strong> Inline styling included to simulate a live modern website look.</li>
-            <li><strong>Call to Action Button:</strong> Ready-made clickable design container.</li>
-        </ul>
+    <div class="row"><span>Status</span><span class="ok">Page loaded ✓</span></div>
+    <div class="row"><span>Running inside an iframe</span><span id="iframe">…</span></div>
+    <div class="row"><span>Protocol</span><span id="proto">…</span></div>
+    <div class="row"><span>Viewport size</span><span id="size">…</span></div>
+    <div class="row"><span>Current time</span><span id="time">…</span></div>
 
-        <p>You can save this file as <code>index.html</code> and instantly view it inside any web browser.</p>
-        
-        <a href="https://www.w3schools.com/html/" class="button" target="_blank">Learn More HTML</a>
-    </div>
+    <button id="btn" type="button">Click test</button>
+    <span class="count" id="count">0</span>
+  </div>
 
+<script>
+  function update() {
+    var framed = false;
+    try { framed = window.self !== window.top; } catch (e) { framed = true; }
+    document.getElementById('iframe').textContent = framed ? 'Yes' : 'No';
+    document.getElementById('proto').textContent = location.protocol;
+    document.getElementById('size').textContent = innerWidth + ' × ' + innerHeight;
+    document.getElementById('time').textContent = new Date().toLocaleTimeString();
+  }
+  update();
+  setInterval(update, 1000);
+  addEventListener('resize', update);
+  var n = 0;
+  document.getElementById('btn').addEventListener('click', function () {
+    document.getElementById('count').textContent = ++n;
+  });
+</script>
 </body>
 </html>
